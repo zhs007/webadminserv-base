@@ -49,6 +49,7 @@ module.exports = app => {
             } while (true);
         }
 
+        // 登录
         * login(username, password) {
             const mysqlconn = app.mysql;
             const ret = yield mysqlconn.select('account', {
@@ -63,13 +64,15 @@ module.exports = app => {
                 return {uid: uid, username: username, token: token};
             }
 
-            return {uid: -1, username: username};;
+            return {uid: -1, username: username};
         }
 
+        // 注册
         * reg(username, password) {
             const mysqlconn = app.mysql;
 
             let uid = -1;
+            let self = this;
             const result = yield mysqlconn.beginTransactionScope(function* (conn) {
                 const acsret = yield mysqlconn.select('account', {
                     where: {username: username},
@@ -80,7 +83,7 @@ module.exports = app => {
                     return {uid: -1, username: username};
                 }
                 
-                const token = yield this._generateToken(mysqlconn);
+                const token = yield self._generateToken(mysqlconn);
 
                 const uiret = yield mysqlconn.insert('uidinfo', {});
 
@@ -105,8 +108,8 @@ module.exports = app => {
             return result;
         }
 
+        // 根据token检查用户
         * queryWithToken(token) {
-            console.log(token);
             const mysqlconn = app.mysql;
 
             const ubret = yield mysqlconn.select('userbase', {
@@ -133,6 +136,24 @@ module.exports = app => {
 
             return {uid: -1};
         }
+
+        // logout
+        * logout(token) {
+            const mysqlconn = app.mysql;
+            const ret = yield mysqlconn.select('userbase', {
+                where: {token: token},
+                columns: ['uid']
+            });
+
+            if (ret.length > 0) {
+                const uid = ret[0].uid;
+                const token = yield this._generateToken(mysqlconn, uid);
+
+                return {uid: uid};
+            }
+
+            return {uid: -1};
+        }        
     }
 
     return AccountService;

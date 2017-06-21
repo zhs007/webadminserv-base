@@ -7,3 +7,10 @@ exports.mysql = {
     enable: true,
     package: 'egg-mysql',
 };
+
+// exports.session = true;
+
+exports.redis = {
+  enable: true,
+  package: 'egg-redis',
+};

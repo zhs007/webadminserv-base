@@ -8,4 +8,5 @@ module.exports = app => {
   app.get(API_PREFIX + '/account/login', 'account.login');
   app.get(API_PREFIX + '/account/reg', 'account.reg');
   app.get(API_PREFIX + '/account/querywithtoken', 'account.queryWithToken');
+  app.get(API_PREFIX + '/account/logout', 'account.logout');
 };
