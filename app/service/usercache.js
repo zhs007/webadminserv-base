@@ -10,8 +10,31 @@ module.exports = app => {
             return this.app.config.webadminserv.prefix + key;
         }
 
+        chg2UserCache(ui) {
+            let uc = {
+                uid: ui.uid,
+                username: ui.username,
+                permissions: JSON.stringify(ui.permissions),
+                token: ui.token
+            };
+
+            return uc;
+        }
+
+        chg2UserInfo(uc) {
+            let ui = {
+                uid: uc.uid,
+                username: uc.username,
+                permissions: JSON.parse(uc.permissions),
+                token: uc.token
+            };
+
+            return ui;
+        }
+
         // 重设usercache
-        * saveUserCache(uc) {
+        * saveUserCache(ui) {
+            const uc = this.chg2UserCache(ui);
             const redisconn = app.redis;
             const rkey = this._getRedisKey('uc:' + uc.token);
             yield redisconn.hmset(rkey, uc);
@@ -27,7 +50,7 @@ module.exports = app => {
             const uc = yield redisconn.hmgetall(rkey);
             yield redisconn.expire(rkey, EXPIRE_TIME);
 
-            return uc;
+            return this.chg2UserInfo(uc);
         }
 
         // 释放usercache

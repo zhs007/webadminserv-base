@@ -16,10 +16,15 @@ module.exports = app => {
                 columns: ['permissions']
             });
 
+            // console.log(uid);
+            // console.log(JSON.stringify(ret));
+
             let arr = [];
             for (let i = 0; i < ret.length; ++i) {
-                arr.push(ret.permissions);
+                arr.push(ret[i].permissions);
             }
+
+            // console.log(JSON.stringify(arr));
 
             return arr;
         }
