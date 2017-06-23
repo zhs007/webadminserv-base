@@ -96,6 +96,7 @@ module.exports = app => {
 
                 const ubret = yield mysqlconn.insert('userbase', {
                     uid: uid, 
+                    nickname: username,
                     token: token});
 
                 return {

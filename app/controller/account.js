@@ -27,7 +27,9 @@ module.exports = app => {
             const password = ctx.query.password;
 
             const ui = yield ctx.service.account.reg(username, password);
+            // console.log(JSON.stringify(ui));
             if (ui.uid > 0) {
+                yield ctx.service.userevent.onReg(ui);
                 yield ctx.service.userevent.onLogin(ui);
                 // yield ctx.service.usercache.saveUserCache(ui);
                 // this.ctx.session.ui = ui;

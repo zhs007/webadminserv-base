@@ -15,7 +15,8 @@ module.exports = app => {
                 uid: ui.uid,
                 username: ui.username,
                 permissions: JSON.stringify(ui.permissions),
-                token: ui.token
+                token: ui.token,
+                noreadmail: ui.noreadmail
             };
 
             return uc;
@@ -26,7 +27,8 @@ module.exports = app => {
                 uid: uc.uid,
                 username: uc.username,
                 permissions: JSON.parse(uc.permissions),
-                token: uc.token
+                token: uc.token,
+                noreadmail: uc.noreadmail
             };
 
             return ui;
@@ -47,8 +49,10 @@ module.exports = app => {
         * getUserCache(token) {
             const redisconn = app.redis;
             const rkey = this._getRedisKey('uc:' + token);
-            const uc = yield redisconn.hmgetall(rkey);
+            const uc = yield redisconn.hgetall(rkey);
             yield redisconn.expire(rkey, EXPIRE_TIME);
+
+            // console.log(JSON.stringify(uc));
 
             return this.chg2UserInfo(uc);
         }
