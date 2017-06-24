@@ -14,6 +14,7 @@ module.exports = app => {
             let uc = {
                 uid: ui.uid,
                 username: ui.username,
+                nickname: ui.nickname,
                 permissions: JSON.stringify(ui.permissions),
                 token: ui.token,
                 noreadmail: ui.noreadmail
@@ -26,6 +27,7 @@ module.exports = app => {
             let ui = {
                 uid: uc.uid,
                 username: uc.username,
+                nickname: uc.nickname,
                 permissions: JSON.parse(uc.permissions),
                 token: uc.token,
                 noreadmail: uc.noreadmail

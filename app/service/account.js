@@ -61,7 +61,10 @@ module.exports = app => {
                 const uid = ret[0].uid;
                 const token = yield this._generateToken(mysqlconn, uid);
 
-                return {uid: uid, username: username, token: token};
+                return {uid: uid, 
+                    username: username, 
+                    nickname: username, 
+                    token: token};
             }
 
             return {uid: -1, username: username};
@@ -102,6 +105,7 @@ module.exports = app => {
                 return {
                     uid: uid, 
                     username: username,
+                    nickname: username,
                     token: token
                 };
             }, this.ctx);
@@ -131,6 +135,7 @@ module.exports = app => {
                 return {
                     uid: ubret[0].uid, 
                     username: acret[0].username,
+                    nickname: acret[0].username,
                     token: token
                 };
             }
