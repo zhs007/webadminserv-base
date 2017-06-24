@@ -3,45 +3,74 @@
 module.exports = app => {
     class AccountController extends app.Controller {
         * login() {
-            this.ctx.set('Access-Control-Allow-Origin', '*');
-
             const ctx = this.ctx;
+            const resultdata = this.ctx.resultdata;
+            const ERRCODE = ctx.helper.ERRCODE;
+            ctx.onStart();
+
+            if (!ctx.helper.checkQueryParams(['username', 'password'])) {
+                ctx.sendErrInfo(ERRCODE.ERRCODE.EC_NOPARAMS);
+
+                return ;
+            }
+
             const username = ctx.query.username;
             const password = ctx.query.password;
 
             const ui = yield ctx.service.account.login(username, password);
-            if (ui.uid > 0) {
-                yield ctx.service.userevent.onLogin(ui);
-                // yield ctx.service.usercache.saveUserCache(ui);
-                // this.ctx.session.ui = ui;
+            if (ui.uid <= 0) {
+                ctx.sendErrInfo(ERRCODE.ERRCODE.EC_LOGINERR);
+
+                return ;                
             }
 
-            this.ctx.body = JSON.stringify(ui);
+            yield ctx.service.userevent.onLogin(ui);
+
+            ctx.setResultData_myUserInfo(ui);
+            ctx.sendResultData(true);
         }
 
         * reg() {
-            this.ctx.set('Access-Control-Allow-Origin', '*');
-
             const ctx = this.ctx;
+            const resultdata = this.ctx.resultdata;
+            const ERRCODE = ctx.helper.ERRCODE;
+            ctx.onStart();
+
+            if (!ctx.helper.checkQueryParams(['username', 'password'])) {
+                ctx.sendErrInfo(ERRCODE.ERRCODE.EC_NOPARAMS);
+
+                return ;
+            }
+
             const username = ctx.query.username;
             const password = ctx.query.password;
 
             const ui = yield ctx.service.account.reg(username, password);
-            // console.log(JSON.stringify(ui));
-            if (ui.uid > 0) {
-                yield ctx.service.userevent.onReg(ui);
-                yield ctx.service.userevent.onLogin(ui);
-                // yield ctx.service.usercache.saveUserCache(ui);
-                // this.ctx.session.ui = ui;
+            if (ui.uid <= 0) {
+                ctx.sendErrInfo(ERRCODE.ERRCODE.EC_REGERR);
+
+                return ;                
             }
 
-            this.ctx.body = JSON.stringify(ui);
+            yield ctx.service.userevent.onReg(ui);
+            yield ctx.service.userevent.onLogin(ui);
+
+            ctx.setResultData_myUserInfo(ui);
+            ctx.sendResultData(true);
         }
 
         * queryWithToken() {
-            this.ctx.set('Access-Control-Allow-Origin', '*');
-            
             const ctx = this.ctx;
+            const resultdata = this.ctx.resultdata;
+            const ERRCODE = ctx.helper.ERRCODE;
+            ctx.onStart();
+
+            if (!ctx.helper.checkQueryParams(['token'])) {
+                ctx.sendErrInfo(ERRCODE.ERRCODE.EC_NOPARAMS);
+
+                return ;
+            }
+
             const token = ctx.query.token;
 
             const ui = yield ctx.service.account.queryWithToken(token);
@@ -51,20 +80,30 @@ module.exports = app => {
                 // this.ctx.session.ui = ui;
             }            
 
-            this.ctx.body = JSON.stringify(ui);
+            ctx.setResultData_myUserInfo(ui);
+            ctx.sendResultData(true);
         }
 
         * logout() {
-            this.ctx.set('Access-Control-Allow-Origin', '*');
-            
             const ctx = this.ctx;
+            const resultdata = this.ctx.resultdata;
+            const ERRCODE = ctx.helper.ERRCODE;
+            ctx.onStart();
+
+            if (!ctx.helper.checkQueryParams(['token'])) {
+                ctx.sendErrInfo(ERRCODE.ERRCODE.EC_NOPARAMS);
+
+                return ;
+            }
+
             const token = ctx.query.token;
 
             const ui = yield ctx.service.account.logout(token);
             yield ctx.service.usercache.delUserCache(token);
             // this.ctx.session.ui = undefined;
 
-            this.ctx.body = JSON.stringify(ui);
+            ctx.setResultData_myUserInfo(ui);
+            ctx.sendResultData(true);
         }
     }
     return AccountController;
