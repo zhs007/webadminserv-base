@@ -1,53 +1,27 @@
 'use strict';
 
 module.exports = app => {
-    class UserMgrController extends app.Controller {
-        * get() {
-            this.ctx.set('Access-Control-Allow-Origin', '*');
+  class UserMgrController extends app.Controller {
+    * get() {
+      const ctx = this.ctx;
+      const resultdata = this.ctx.resultdata;
+      const ERRCODE = ctx.helper.ERRCODE;
+      ctx.onStart(true);
 
-            const ctx = this.ctx;
-            const token = ctx.query.token;
-            const nums = ctx.query.nums;
+      if (!ctx.helper.checkQueryParams(['token', 'nums'])) {
+        ctx.sendErrInfo(ERRCODE.ERRCODE.EC_NOPARAMS);
 
-            let ui = yield ctx.service.usercache.getUserCache(token);
-            let arr = yield ctx.service.usermgr.getUserlist(nums);
+        return;
+      }
 
-            this.ctx.body = JSON.stringify({data: arr});
-        }
+      const nums = ctx.query.nums;
 
-        * read() {
-            this.ctx.set('Access-Control-Allow-Origin', '*');
+      let arr = yield ctx.service.usermgr.getUserlist(nums);
 
-            const ctx = this.ctx;
-            const username = ctx.query.username;
-            const password = ctx.query.password;
-
-            const ui = yield ctx.service.account.reg(username, password);
-            if (ui.uid > 0) {
-                yield ctx.service.userevent.onLogin(ui);
-                // yield ctx.service.usercache.saveUserCache(ui);
-                // this.ctx.session.ui = ui;
-            }
-
-            this.ctx.body = JSON.stringify(ui);
-        }
-
-        * readAll() {
-            this.ctx.set('Access-Control-Allow-Origin', '*');
-
-            const ctx = this.ctx;
-            const username = ctx.query.username;
-            const password = ctx.query.password;
-
-            const ui = yield ctx.service.account.login(username, password);
-            if (ui.uid > 0) {
-                yield ctx.service.userevent.onLogin(ui);
-                // yield ctx.service.usercache.saveUserCache(ui);
-                // this.ctx.session.ui = ui;
-            }
-
-            this.ctx.body = JSON.stringify(ui);
-        }
+      ctx.resultdata.setMailList(arr);
+      ctx.sendResultData(true, false);
     }
-    return UserMgrController;
+  }
+
+  return UserMgrController;
 };

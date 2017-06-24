@@ -1,25 +1,29 @@
 'use strict';
 
 class ResultData {
-    constructor() {
-        this.data = {};
-    }
+  constructor() {
+    this.data = {};
+  }
 
-    setMyUserInfo(ui) {
-        this.data.myuserinfo = ui;
-    }
+  setMyUserInfo(ui) {
+    this.data.myuserinfo = ui;
+  }
 
-    setErrInfo(ei) {
-        this.data.errinfo = ei;
-    }
+  setErrInfo(ei) {
+    this.data.errinfo = ei;
+  }
 
-    end(isok) {
-        this.data.isok = isok;
+  setMailList(lstmail) {
+    this.data.lstmail = lstmail;
+  }
 
-        return JSON.stringify(this.data);
-    }
+  end(isok) {
+    this.data.isok = isok;
+
+    return JSON.stringify(this.data);
+  }
 };
 
 module.exports = {
-    ResultData: ResultData
+  ResultData: ResultData
 };
