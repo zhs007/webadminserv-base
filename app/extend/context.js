@@ -8,18 +8,22 @@ const USERCACHE = Symbol('Context#usercache');
 
 module.exports = {
   get usercache() {
-    if (!this[RESULTDATA]) {
-      this[RESULTDATA] = new UserCache(this.app);
+    if (!this[USERCACHE]) {
+      this[USERCACHE] = new UserCache(this.app);
     }
 
-    return this[RESULTDATA];
+    return this[USERCACHE];
   },
 
-  onStart(isUseToken) {
+  * onStart(isUseToken) {
     this.set('Access-Control-Allow-Origin', '*');
 
+    // console.log(this.query);
+    // console.log(isUseToken);
     if (isUseToken && this.query.hasOwnProperty('token')) {
-      this.usercache.load(this.query.token);
+      // console.log('load');
+      // console.log(this.usercache);
+      yield this.usercache.load(this.query.token);
     }
   },
 
@@ -31,11 +35,11 @@ module.exports = {
     return this[RESULTDATA];
   },
 
-  sendResultData(isok, isSaveUserCache) {
+  * sendResultData(isok, isSaveUserCache) {
     this.body = this.resultdata.end(isok);
 
     if (isSaveUserCache) {
-      this.usercache.save();
+      yield this.usercache.save();
     }
   },
 
@@ -47,8 +51,8 @@ module.exports = {
     }
   },
 
-  sendErrInfo(ec) {
+  * sendErrInfo(ec) {
     this.resultdata.setErrInfo(this.helper.buildErrInfo(ec));
-    this.sendResultData(false);
+    yield this.sendResultData(false);
   }
 };

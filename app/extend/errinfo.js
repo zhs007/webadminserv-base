@@ -11,22 +11,5 @@ const ERRCODE = {
 };
 
 module.exports = {
-  ERRCODE: ERRCODE,
-
-  makeStrInfo(ec) {
-    for (let key in ERRCODE) {
-      if (ERRCODE[key] == ec) {
-        return key;
-      }
-    }
-
-    return 'EC_UNDEFINED';
-  },
-
-  buildErrInfo(ec) {
-    return {
-      errcode: ec,
-      strinfo: makeErrInfoStr(ec),
-    };
-  }
+  ERRCODE: ERRCODE
 };

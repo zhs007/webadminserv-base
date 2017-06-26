@@ -1,6 +1,7 @@
 'use strict';
 
 const JSONOBJ_NAME = ['permissions'];
+const EXPIRE_TIME = 3 * 60 * 60;
 
 class UserCache {
   constructor(app) {
@@ -17,6 +18,7 @@ class UserCache {
   }
 
   setMyUserInfo(ui) {
+    // console.log('setmyuserinfo' + JSON.stringify(ui));
     for (let key in ui) {
       this.ui[key] = ui[key];
     }
@@ -62,7 +64,8 @@ class UserCache {
     }
 
     const uc = this._chg2UserCache();
-    const redisconn = app.redis;
+    // console.log('save' + JSON.stringify(uc));
+    const redisconn = this.app.redis;
     const rkey = this._getRedisKey('uc:' + uc.token);
     yield redisconn.hmset(rkey, uc);
     yield redisconn.expire(rkey, EXPIRE_TIME);
@@ -70,17 +73,19 @@ class UserCache {
 
   // 获取usercache
   * load(token) {
-    const redisconn = app.redis;
+    // console.log(token);
+    const redisconn = this.app.redis;
     const rkey = this._getRedisKey('uc:' + token);
     const uc = yield redisconn.hgetall(rkey);
     yield redisconn.expire(rkey, EXPIRE_TIME);
 
-    _parse(uc);
+    // console.log(uc);
+    this._parse(uc);
   }
 
   // 释放usercache
   * del(token) {
-    const redisconn = app.redis;
+    const redisconn = this.app.redis;
     const rkey = this._getRedisKey('uc:' + token);
     const uc = yield redisconn.del(rkey);
 

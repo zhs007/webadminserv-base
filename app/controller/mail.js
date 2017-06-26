@@ -6,10 +6,10 @@ module.exports = app => {
       const ctx = this.ctx;
       const resultdata = this.ctx.resultdata;
       const ERRCODE = ctx.helper.ERRCODE;
-      ctx.onStart(true);
+      yield ctx.onStart(true);
 
       if (!ctx.helper.checkQueryParams(['token', 'nums'])) {
-        ctx.sendErrInfo(ERRCODE.ERRCODE.EC_NOPARAMS);
+        yield ctx.sendErrInfo(ERRCODE.EC_NOPARAMS);
 
         return;
       }
@@ -19,7 +19,7 @@ module.exports = app => {
       let arr = yield ctx.service.mail.getMail(ctx.usercache.ui.uid, nums);
 
       ctx.resultdata.setMailList(arr);
-      ctx.sendResultData(true, false);
+      yield ctx.sendResultData(true, false);
     }
 
     * read() {

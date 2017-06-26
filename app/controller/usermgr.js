@@ -9,7 +9,7 @@ module.exports = app => {
       ctx.onStart(true);
 
       if (!ctx.helper.checkQueryParams(['token', 'nums'])) {
-        ctx.sendErrInfo(ERRCODE.ERRCODE.EC_NOPARAMS);
+        yield ctx.sendErrInfo(ERRCODE.EC_NOPARAMS);
 
         return;
       }
@@ -19,7 +19,7 @@ module.exports = app => {
       let arr = yield ctx.service.usermgr.getUserlist(nums);
 
       ctx.resultdata.setMailList(arr);
-      ctx.sendResultData(true, false);
+      yield ctx.sendResultData(true, false);
     }
   }
 

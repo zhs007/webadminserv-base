@@ -130,7 +130,7 @@ module.exports = app => {
         return { uid: -2 };
       }
 
-      const newtoken = yield this._generateToken(mysqlconn, uid);
+      const newtoken = yield this._generateToken(mysqlconn, ubret[0].uid);
 
       const acret = yield mysqlconn.select('account', {
         where: { uid: ubret[0].uid },

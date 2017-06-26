@@ -6,10 +6,10 @@ module.exports = app => {
       const ctx = this.ctx;
       const resultdata = this.ctx.resultdata;
       const ERRCODE = ctx.helper.ERRCODE;
-      ctx.onStart(false);
+      yield ctx.onStart(false);
 
       if (!ctx.helper.checkQueryParams(['username', 'password'])) {
-        ctx.sendErrInfo(ERRCODE.ERRCODE.EC_NOPARAMS);
+        yield ctx.sendErrInfo(ERRCODE.EC_NOPARAMS);
 
         return;
       }
@@ -19,7 +19,7 @@ module.exports = app => {
 
       const ui = yield ctx.service.account.login(username, password);
       if (ui.uid <= 0) {
-        ctx.sendErrInfo(ERRCODE.ERRCODE.EC_LOGINERR);
+        yield ctx.sendErrInfo(ERRCODE.EC_LOGINERR);
 
         return;
       }
@@ -27,17 +27,17 @@ module.exports = app => {
       yield ctx.service.userevent.onLogin(ui);
 
       ctx.setMyUserInfo(ui, true);
-      ctx.sendResultData(true, true);
+      yield ctx.sendResultData(true, true);
     }
 
     * reg() {
       const ctx = this.ctx;
       const resultdata = this.ctx.resultdata;
       const ERRCODE = ctx.helper.ERRCODE;
-      ctx.onStart(false);
+      yield ctx.onStart(false);
 
       if (!ctx.helper.checkQueryParams(['username', 'password'])) {
-        ctx.sendErrInfo(ERRCODE.ERRCODE.EC_NOPARAMS);
+        yield ctx.sendErrInfo(ERRCODE.EC_NOPARAMS);
 
         return;
       }
@@ -47,7 +47,7 @@ module.exports = app => {
 
       const ui = yield ctx.service.account.reg(username, password);
       if (ui.uid <= 0) {
-        ctx.sendErrInfo(ERRCODE.ERRCODE.EC_REGERR);
+        yield ctx.sendErrInfo(ERRCODE.EC_REGERR);
 
         return;
       }
@@ -56,17 +56,17 @@ module.exports = app => {
       yield ctx.service.userevent.onLogin(ui);
 
       ctx.setMyUserInfo(ui, true);
-      ctx.sendResultData(true, true);
+      yield ctx.sendResultData(true, true);
     }
 
     * queryWithToken() {
       const ctx = this.ctx;
       const resultdata = this.ctx.resultdata;
       const ERRCODE = ctx.helper.ERRCODE;
-      ctx.onStart(true);
+      yield ctx.onStart(true);
 
       if (!ctx.helper.checkQueryParams(['token'])) {
-        ctx.sendErrInfo(ERRCODE.ERRCODE.EC_NOPARAMS);
+        yield ctx.sendErrInfo(ERRCODE.EC_NOPARAMS);
 
         return;
       }
@@ -75,7 +75,7 @@ module.exports = app => {
 
       const ui = yield ctx.service.account.queryWithToken(token);
       if (ui.uid <= 0) {
-        ctx.sendErrInfo(ERRCODE.ERRCODE.EC_TOKENERR);
+        yield ctx.sendErrInfo(ERRCODE.EC_TOKENERR);
 
         return;
       }
@@ -83,17 +83,17 @@ module.exports = app => {
       yield ctx.service.userevent.onLogin(ui);
 
       ctx.setMyUserInfo(ui, true);
-      ctx.sendResultData(true, true);
+      yield ctx.sendResultData(true, true);
     }
 
     * logout() {
       const ctx = this.ctx;
       const resultdata = this.ctx.resultdata;
       const ERRCODE = ctx.helper.ERRCODE;
-      ctx.onStart(true);
+      yield ctx.onStart(true);
 
       if (!ctx.helper.checkQueryParams(['token'])) {
-        ctx.sendErrInfo(ERRCODE.ERRCODE.EC_NOPARAMS);
+        yield ctx.sendErrInfo(ERRCODE.EC_NOPARAMS);
 
         return;
       }
@@ -104,7 +104,7 @@ module.exports = app => {
       yield ctx.usercache.del(token);
 
       ctx.setMyUserInfo({ uid: -1 });
-      ctx.sendResultData(true, false);
+      yield ctx.sendResultData(true, false);
     }
   }
   return AccountController;
