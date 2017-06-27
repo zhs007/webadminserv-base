@@ -17,6 +17,10 @@ class ResultData {
     this.data.lstmail = lstmail;
   }
 
+  setUserList(lstuser) {
+    this.data.lstuser = lstuser;
+  }  
+
   end(isok) {
     this.data.isok = isok;
 
