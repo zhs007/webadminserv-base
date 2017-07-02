@@ -19,7 +19,11 @@ class ResultData {
 
   setUserList(lstuser) {
     this.data.lstuser = lstuser;
-  }  
+  }
+
+  setRangeInfo(rangeinfo) {
+    this.data.rangeinfo = rangeinfo;
+  }    
 
   end(isok) {
     this.data.isok = isok;

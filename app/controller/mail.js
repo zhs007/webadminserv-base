@@ -8,13 +8,13 @@ module.exports = app => {
       const ERRCODE = ctx.helper.ERRCODE;
       yield ctx.onStart(true);
 
-      if (!ctx.helper.checkQueryParams(['token', 'nums'])) {
+      if (!ctx.helper.checkRequestParams(['token', 'nums'])) {
         yield ctx.sendErrInfo(ERRCODE.EC_NOPARAMS);
 
         return;
       }
 
-      const nums = ctx.query.nums;
+      const nums = ctx.helper.getRequestParam('nums');
 
       let arr = yield ctx.service.mail.getMail(ctx.usercache.ui.uid, nums);
 
@@ -26,8 +26,8 @@ module.exports = app => {
       this.ctx.set('Access-Control-Allow-Origin', '*');
 
       const ctx = this.ctx;
-      const username = ctx.query.username;
-      const password = ctx.query.password;
+      const username = ctx.helper.getRequestParam('username');
+      const password = ctx.helper.getRequestParam('password');
 
       const ui = yield ctx.service.account.reg(username, password);
       if (ui.uid > 0) {
@@ -43,8 +43,8 @@ module.exports = app => {
       this.ctx.set('Access-Control-Allow-Origin', '*');
 
       const ctx = this.ctx;
-      const username = ctx.query.username;
-      const password = ctx.query.password;
+      const username = ctx.helper.getRequestParam('username');
+      const password = ctx.helper.getRequestParam('password');
 
       const ui = yield ctx.service.account.login(username, password);
       if (ui.uid > 0) {

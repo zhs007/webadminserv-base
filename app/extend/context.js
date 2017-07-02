@@ -16,14 +16,19 @@ module.exports = {
   },
 
   * onStart(isUseToken) {
-    this.set('Access-Control-Allow-Origin', '*');
+    // this.set('Access-Control-Allow-Origin', '*');
 
     // console.log(this.query);
     // console.log(isUseToken);
-    if (isUseToken && this.query.hasOwnProperty('token')) {
+    if (isUseToken) {
       // console.log('load');
       // console.log(this.usercache);
-      yield this.usercache.load(this.query.token);
+      if (this.query.hasOwnProperty('token')) {
+        yield this.usercache.load(this.query.token);
+      }
+      else if (this.request.body.hasOwnProperty('token')) {
+        yield this.usercache.load(this.request.body.token);
+      }
     }
   },
 

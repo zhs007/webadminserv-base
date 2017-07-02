@@ -8,13 +8,13 @@ module.exports = app => {
       const ERRCODE = ctx.helper.ERRCODE;
       yield ctx.onStart(true);
 
-      if (!ctx.helper.checkQueryParams(['token', 'nums'])) {
+      if (!ctx.helper.checkRequestParams(['token', 'nums'])) {
         yield ctx.sendErrInfo(ERRCODE.EC_NOPARAMS);
 
         return;
       }
 
-      const nums = ctx.query.nums;
+      const nums = ctx.helper.getRequestParam('nums');
 
       let arr = [];
       let arrroot = yield ctx.service.usermgr.getUserlist_root(nums);
@@ -24,7 +24,7 @@ module.exports = app => {
         arrroot[i].isroot = true;
         arr.push(arrroot[i]);
       }
-      
+
       for (let i = 0; i < arrnotroot.length; ++i) {
         arrnotroot[i].isroot = false;
         arr.push(arrnotroot[i]);

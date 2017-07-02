@@ -8,14 +8,14 @@ module.exports = app => {
       const ERRCODE = ctx.helper.ERRCODE;
       yield ctx.onStart(false);
 
-      if (!ctx.helper.checkQueryParams(['username', 'password'])) {
+      if (!ctx.helper.checkRequestParams(['username', 'password'])) {
         yield ctx.sendErrInfo(ERRCODE.EC_NOPARAMS);
 
         return;
       }
 
-      const username = ctx.query.username;
-      const password = ctx.query.password;
+      const username = ctx.helper.getRequestParam('username');
+      const password = ctx.helper.getRequestParam('password');
 
       const ui = yield ctx.service.account.login(username, password);
       if (ui.uid <= 0) {
@@ -36,14 +36,14 @@ module.exports = app => {
       const ERRCODE = ctx.helper.ERRCODE;
       yield ctx.onStart(false);
 
-      if (!ctx.helper.checkQueryParams(['username', 'password'])) {
+      if (!ctx.helper.checkRequestParams(['username', 'password'])) {
         yield ctx.sendErrInfo(ERRCODE.EC_NOPARAMS);
 
         return;
       }
 
-      const username = ctx.query.username;
-      const password = ctx.query.password;
+      const username = ctx.helper.getRequestParam('username');
+      const password = ctx.helper.getRequestParam('password');
 
       const ui = yield ctx.service.account.reg(username, password);
       if (ui.uid <= 0) {
@@ -65,13 +65,13 @@ module.exports = app => {
       const ERRCODE = ctx.helper.ERRCODE;
       yield ctx.onStart(true);
 
-      if (!ctx.helper.checkQueryParams(['token'])) {
+      if (!ctx.helper.checkRequestParams(['token'])) {
         yield ctx.sendErrInfo(ERRCODE.EC_NOPARAMS);
 
         return;
       }
 
-      const token = ctx.query.token;
+      const token = ctx.helper.getRequestParam('token');
 
       const ui = yield ctx.service.account.queryWithToken(token);
       if (ui.uid <= 0) {
@@ -92,13 +92,13 @@ module.exports = app => {
       const ERRCODE = ctx.helper.ERRCODE;
       yield ctx.onStart(true);
 
-      if (!ctx.helper.checkQueryParams(['token'])) {
+      if (!ctx.helper.checkRequestParams(['token'])) {
         yield ctx.sendErrInfo(ERRCODE.EC_NOPARAMS);
 
         return;
       }
 
-      const token = ctx.query.token;
+      const token = ctx.helper.getRequestParam('token');
 
       const ui = yield ctx.service.account.logout(token);
       yield ctx.usercache.del(token);
